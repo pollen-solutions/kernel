@@ -1,0 +1,51 @@
+{
+  "name": "pollen-solutions/kernel",
+  "description": "Pollen Solutions - Kernel Component - Basic tools for building a web application based on the Pollen Solutions component suite.",
+  "homepage": "https://www.presstify.com/pollen-solutions/kernel/",
+  "keywords": [
+    "pollen-solutions",
+    "component",
+    "kernel"
+  ],
+  "time": "2021-07-09",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jordy Manner",
+      "email": "jordy@presstify.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "pollen-solutions/config": "^1.0",
+    "pollen-solutions/container": "^1.0",
+    "pollen-solutions/event": "^1.0",
+    "pollen-solutions/http": "^1.0",
+    "pollen-solutions/routing": "^1.0",
+    "pollen-solutions/support": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0",
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "files": [
+      "src/helpers.php"
+    ],
+    "psr-4": {
+      "Pollen\\Kernel\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Pollen\\Kernel\\Test\\": "tests"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
