@@ -259,10 +259,6 @@ class Application extends Container implements ApplicationInterface
             )
         );
 
-        if ($tz = $configurator->get('timezone', ini_get('date.timezone'))) {
-            date_default_timezone_set($tz);
-        }
-
         mb_internal_encoding($configurator->get('charset', 'UTF-8'));
     }
 
