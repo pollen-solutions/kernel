@@ -277,7 +277,7 @@ class Application extends Container implements ApplicationInterface
         foreach ($this->getServiceProviders() as $definition) {
             if (is_string($definition)) {
                 try {
-                    $serviceProvider = new $definition();
+                    $serviceProvider = new $definition($this);
                 } catch (Exception $e) {
                     throw new RuntimeException(
                         'ServiceProvider [%s] instanciation return exception :%s',
