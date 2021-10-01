@@ -200,6 +200,13 @@ class Application extends Container implements ApplicationInterface
 
             $this->publicDir = Env::get('APP_PUBLIC_DIR', 'public');
 
+            Env::setMergeVars([
+                'app' => [
+                    'base_dir'   => $this->getBasePath(),
+                    'public_dir' => $this->getPublicPath(),
+                ],
+            ]);
+
             $this->preBuildKernel();
 
             $this->preBuilt = true;
@@ -246,7 +253,6 @@ class Application extends Container implements ApplicationInterface
         $this->share(ConfiguratorInterface::class, $configurator = new Configurator());
 
         $configurator->addSchema('app_url', Expect::string());
-        $configurator->addSchema('timezone', Expect::string());
 
         /** @todo Depuis le framework */
         $configurator->set(
