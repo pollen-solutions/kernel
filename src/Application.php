@@ -169,7 +169,9 @@ class Application extends Container implements ApplicationInterface
         }
 
         parent::__construct();
-
+        
+        Env::enableGlobal($_ENV['USE_GLOBAL_ENV'] ?? false);
+        
         $this->preBuild();
     }
 
@@ -183,6 +185,7 @@ class Application extends Container implements ApplicationInterface
         if (self::$instance instanceof self) {
             return self::$instance;
         }
+
         throw new ManagerRuntimeException(sprintf('Unavailable [%s] instance', __CLASS__));
     }
 
