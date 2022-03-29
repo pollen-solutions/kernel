@@ -17,7 +17,6 @@
   ],
   "require": {
     "php": "^7.4 || ^8.0",
-    "pollen-solutions/config": "^1.0",
     "pollen-solutions/container": "^1.0",
     "pollen-solutions/event": "^1.0",
     "pollen-solutions/http": "^1.0",

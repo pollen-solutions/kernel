@@ -6,50 +6,33 @@ namespace Pollen\Kernel;
 
 use Pollen\Asset\AssetManagerInterface;
 use Pollen\Config\ConfiguratorInterface;
-use Pollen\Container\ContainerInterface;
 use Pollen\Container\ServiceProviderInterface;
-use Pollen\Cookie\CookieJarInterface;
 use Pollen\Database\DatabaseManagerInterface;
 use Pollen\Debug\DebugManagerInterface;
-use Pollen\Encryption\EncrypterInterface;
 use Pollen\Event\EventDispatcherInterface;
 use Pollen\Faker\FakerInterface;
-use Pollen\Field\FieldManagerInterface;
-use Pollen\Filesystem\StorageManagerInterface;
-use Pollen\Form\FormManagerInterface;
 use Pollen\Http\RequestInterface;
 use Pollen\Log\LogManagerInterface;
-use Pollen\Mail\MailManagerInterface;
-use Pollen\Metabox\MetaboxManagerInterface;
-use Pollen\Partial\PartialManagerInterface;
 use Pollen\Routing\RouterInterface;
-use Pollen\Session\SessionManagerInterface;
 use Pollen\Support\Concerns\BuildableTraitInterface;
 use Pollen\Validation\ValidatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @property-read AssetManagerInterface asset
  * @property-read ConfiguratorInterface config
- * @property-read CookieJarInterface cookie
- * @property-read EncrypterInterface crypt
  * @property-read DatabaseManagerInterface database
  * @property-read DatabaseManagerInterface db
  * @property-read DebugManagerInterface debug
  * @property-read EventDispatcherInterface event
  * @property-read FakerInterface faker
- * @property-read FieldManagerInterface field
- * @property-read FormManagerInterface form
- * @property-read KernelInterface kernel
  * @property-read LogManagerInterface log
- * @property-read MailManagerInterface mail
- * @property-read MetaboxManagerInterface metabox
- * @property-read PartialManagerInterface partial
  * @property-read RequestInterface request
  * @property-read RouterInterface router
  * @property-read ServerRequestInterface psr_request
- * @property-read SessionManagerInterface session
- * @property-read StorageManagerInterface storage
  * @property-read ValidatorInterface validator
  */
 interface ApplicationInterface extends BuildableTraitInterface, ContainerInterface
@@ -67,6 +50,34 @@ interface ApplicationInterface extends BuildableTraitInterface, ContainerInterfa
      * @return ApplicationInterface
      */
     public function build(): ApplicationInterface;
+
+    /**
+     * Get service provides by dependency injection container.
+     *
+     * @param string $id
+     * @param bool $new
+     *
+     * @return mixed
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    public function get(string $id, bool $new = false);
+
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function has(string $id): bool;
+
+    /**
+     * Try to resolve a service provides by dependency injection container.
+     *
+     * @param string $id
+     *
+     * @return mixed|null
+     */
+    public function resolve(string $id);
 
     /**
      * Get the path of application. Optionally a subdirectory or file included.
@@ -101,13 +112,6 @@ interface ApplicationInterface extends BuildableTraitInterface, ContainerInterfa
     public function getVersion(): string;
 
     /**
-     * Register aliases of services provided by application.
-     *
-     * @return void
-     */
-    public function registerAliases(): void;
-
-    /**
      * Check if the application is running in the console.
      *
      * @return bool
@@ -115,11 +119,34 @@ interface ApplicationInterface extends BuildableTraitInterface, ContainerInterfa
     public function runningInConsole(): bool;
 
     /**
-     * Set configuration parameters.
+     * Check if in debug mode.
      *
-     * @param array $configParams
-     *
-     * @return static
+     * @return bool
      */
-    public function setConfigParams(array $configParams): ApplicationInterface;
+    public function inDebug(): bool;
+
+    /**
+     * Get the current application locale.
+     *
+     * @return string
+     */
+    public function getLocale(): ?string;
+
+    /**
+     * Set the current application locale.
+     *
+     * @param  string $locale
+     *
+     * @return void
+     */
+    public function setLocale(string $locale): void;
+
+    /**
+     * Determine if the application locale is the given locale.
+     *
+     * @param  string $locale
+     *
+     * @return bool
+     */
+    public function isLocale(string $locale): bool;
 }

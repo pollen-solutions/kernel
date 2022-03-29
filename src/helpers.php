@@ -5,23 +5,17 @@ use Pollen\Asset\AssetManagerInterface;
 use Pollen\Config\ConfiguratorInterface;
 use Pollen\Database\DatabaseManagerInterface;
 use Pollen\Event\EventDispatcherInterface;
-use Pollen\Field\FieldDriverInterface;
-use Pollen\Field\FieldManagerInterface;
-use Pollen\Filesystem\FilesystemInterface;
-use Pollen\Filesystem\StorageManagerInterface;
+use Pollen\Kernel\Application;
 use Pollen\Kernel\ApplicationInterface;
-use Pollen\Kernel\Kernel;
-use Pollen\Partial\PartialDriverInterface;
-use Pollen\Partial\PartialManagerInterface;
 use Pollen\Http\RequestInterface;
-use Pollen\Form\FormManagerInterface;
-use Pollen\Form\FormInterface;
 use Pollen\Log\LogManagerInterface;
 use Pollen\Routing\RouterInterface;
 use Pollen\Support\Env;
 use Pollen\Validation\ValidatorInterface;
 use Pollen\View\ViewManagerInterface;
 use Pollen\View\ViewInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 if (!function_exists('app')) {
     /**
@@ -33,13 +27,17 @@ if (!function_exists('app')) {
      */
     function app(?string $serviceAlias = null)
     {
-        $app = Kernel::getInstance()->getApp();
+        $app = Application::getInstance();
 
         if ($serviceAlias === null) {
             return $app;
         }
 
-        return $app->get($serviceAlias);
+        try {
+            return $app->get($serviceAlias);
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+            return null;
+        }
     }
 }
 
@@ -113,7 +111,7 @@ if (!function_exists('env')) {
      * @param string $key
      * @param mixed $default
      *
-     * @return mixed
+     * @return bool|string|null
      */
     function env(string $key, $default = null)
     {
@@ -130,48 +128,6 @@ if (!function_exists('event')) {
     function event(): EventDispatcherInterface
     {
         return app(EventDispatcherInterface::class);
-    }
-}
-
-if (!function_exists('field')) {
-    /**
-     * Field Manager instance|Instance of a registered field.
-     *
-     * @param string|null $alias
-     * @param mixed $idOrParams
-     * @param array $params
-     *
-     * @return FieldManagerInterface|FieldDriverInterface|null
-     */
-    function field(?string $alias = null, $idOrParams = null, array $params = [])
-    {
-        /* @var FieldManagerInterface $manager */
-        $manager = app(FieldManagerInterface::class);
-
-        if (is_null($alias)) {
-            return $manager;
-        }
-        return $manager->get($alias, $idOrParams, $params);
-    }
-}
-
-if (!function_exists('form')) {
-    /**
-     * Form Manager instance|Instance of a registered form.
-     *
-     * @param string|null $name
-     *
-     * @return FormManagerInterface|FormInterface|null
-     */
-    function form(?string $name = null)
-    {
-        /* @var FormManagerInterface $manager */
-        $manager = app(FormManagerInterface::class);
-
-        if ($name === null) {
-            return $manager;
-        }
-        return $manager->get($name);
     }
 }
 
@@ -193,28 +149,6 @@ if (!function_exists('logger')) {
             return $manager;
         }
         $manager->debug($message, $context);
-    }
-}
-
-if (!function_exists('partial')) {
-    /**
-     * Partial Manager instance|Instance of a registered partial.
-     *
-     * @param string|null $alias
-     * @param mixed $idOrParams
-     * @param array $params
-     *
-     * @return PartialManagerInterface|PartialDriverInterface|null
-     */
-    function partial(?string $alias = null, $idOrParams = null, array $params = [])
-    {
-        /* @var PartialManagerInterface $manager */
-        $manager = app(PartialManagerInterface::class);
-
-        if (is_null($alias)) {
-            return $manager;
-        }
-        return $manager->get($alias, $idOrParams, $params);
     }
 }
 
@@ -246,26 +180,6 @@ if (!function_exists('route')) {
         $router = app(RouterInterface::class);
 
         return $router->getNamedRouteUrl($name, $parameters, $absolute);
-    }
-}
-
-if (!function_exists('storage')) {
-    /**
-     * Storage Manager instance|Get instance of Filesystem corresponding to a registered disk (aka mounting point).
-     *
-     * @param string|null $name
-     *
-     * @return StorageManagerInterface|FilesystemInterface
-     */
-    function storage(?string $name = null)
-    {
-        /* @var StorageManagerInterface $manager */
-        $manager = app(StorageManagerInterface::class);
-
-        if ($name === null) {
-            return $manager;
-        }
-        return $manager->disk($name);
     }
 }
 
