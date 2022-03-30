@@ -68,14 +68,7 @@ class HttpKernel implements HttpKernelInterface
 
         $request = $event->getRequest();
 
-        try {
-            $response = $this->requestHandler->handle($request);
-        } catch (Throwable $e) {
-            $response = (new Response())->withStatus(404);
-            $response->getBody()->write($e->getMessage());
-        }
-
-        return  $response;
+        return $this->requestHandler->handle($request);
     }
 
     /**
