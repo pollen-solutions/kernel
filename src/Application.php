@@ -311,9 +311,7 @@ class Application implements ApplicationInterface
             if ($eventDispatcher) {
                 $eventDispatcher->dispatch(new BootEvent($this));
 
-                $eventDispatcher->dispatch(new ConfigLoadEvent($this->config, $this));
-
-                $eventDispatcher->dispatch(new ConfigLoadedEvent($this->config, $this));
+                $this->buildConfig($eventDispatcher);
             }
 
             if (method_exists($this, 'boot')) {
@@ -328,6 +326,18 @@ class Application implements ApplicationInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     *
+     * @return void
+     */
+    protected function buildConfig(EventDispatcherInterface $eventDispatcher): void
+    {
+        $eventDispatcher->dispatch(new ConfigLoadEvent($this->config, $this));
+
+        $eventDispatcher->dispatch(new ConfigLoadedEvent($this->config, $this));
     }
 
     /**
