@@ -270,7 +270,7 @@ class Application implements ApplicationInterface
 
                 /**  Routes */
                 if (
-                    ($requestHandler = $this->get(RequestHandlerInterface::class)) &&
+                    ($requestHandler = $this->get(ApplicationRequestHandlerInterface::class)) &&
                     $requestHandler instanceof RouterInterface
                 ) {
                     $matcher = new UrlMatcher($requestHandler);
