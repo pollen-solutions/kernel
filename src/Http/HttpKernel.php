@@ -6,6 +6,7 @@ namespace Pollen\Kernel\Http;
 
 use Laminas\Diactoros\Response;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Pollen\Kernel\Events\KernelRequestEvent;
 use Pollen\Kernel\Events\KernelResponseEvent;
 use Pollen\Kernel\Events\KernelTerminateEvent;
@@ -29,16 +30,16 @@ class HttpKernel implements HttpKernelInterface
     /**
      * @param EventDispatcherInterface $eventDispatcher
      * @param RequestHandlerInterface $requestHandler
-     * @param EmitterInterface $responseHandler
+     * @param EmitterInterface|null $responseHandler
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         RequestHandlerInterface $requestHandler,
-        EmitterInterface $responseHandler
+        ?EmitterInterface $responseHandler = null
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->requestHandler = $requestHandler;
-        $this->responseHandler = $responseHandler;
+        $this->responseHandler = $responseHandler ?? new SapiEmitter();
 
         if (!self::$instance instanceof static) {
             self::$instance = $this;

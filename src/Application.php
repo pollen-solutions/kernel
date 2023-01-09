@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Pollen\Kernel;
 
@@ -242,8 +240,8 @@ class Application implements ApplicationInterface
         $container->add(HttpKernelInterface::class, function () {
             return new HttpKernel(
                 $this->get(EventDispatcherInterface::class),
-                $this->get(RequestHandlerInterface::class),
-                $this->get(EmitterInterface::class)
+                $this->get(ApplicationRequestHandlerInterface::class),
+                $this->get(ApplicationEmitterInterface::class)
             );
         });
 
